@@ -1,3 +1,5 @@
+> Advanced variant. This template comes from a project that ran several PRD rounds in sequence with per-task model routing. The default single-PRD template used by the process in the README is `skills/ralph-loop-arm/templates/PRD.md`.
+
 # PRD conventions & template
 
 A PRD is one Ralph round: a commit-sized task list derived from one or more specs in

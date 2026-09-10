@@ -1,0 +1,4 @@
+# Ralph loop runtime output (when this repo itself is used as a loop target)
+.ralph/logs/
+progress.txt
+.DS_Store

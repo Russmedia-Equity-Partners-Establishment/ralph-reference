@@ -1,3 +1,5 @@
+> Source: Matt Pocock, "Getting Started With Ralph" (aihero.dev). Kept here as background reading; the process this repository documents is in the root README.
+
 # Getting Started With Ralph
 
 [Ralph](https://ghuntley.com/ralph/) is a technique for running AI coding agents in a loop. You run the same prompt repeatedly. The AI picks its own tasks from a PRD. It commits after each feature. You come back later to working code.

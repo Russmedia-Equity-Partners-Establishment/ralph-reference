@@ -1,5 +1,6 @@
 #!/bin/bash
-# afk-ralph.sh — autonomous Ralph loop for EZPug. ONE task per iteration.
+# afk-ralph.sh — autonomous Ralph loop, multi-round variant (taken from the EZPug project). ONE task per iteration.
+# Advanced alternative to skills/ralph-loop-arm/scripts/loop.sh: several numbered PRDs, per-task model routing.
 #
 # Usage:   ./ralph/afk-ralph.sh <PRD-file> <iterations>
 # Example: ./ralph/afk-ralph.sh ralph/PRD-01-foundation.md 20
