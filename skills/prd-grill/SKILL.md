@@ -16,6 +16,12 @@ The bar for "done grilling": **a fresh engineer with zero context beyond the rep
 - **Always provide your recommended answer** with each question, and say why in one line. Where the choice is enumerable, list 2–4 concrete options inline with the recommended one first, marked "(Recommended)". This lets the user answer a full batch quickly by mostly accepting or overriding recommendations.
 - **No dodging inside batches.** Batches make it easy for the user to skip the hard questions. Track every unanswered or vague answer and re-ask it explicitly at the top of the next batch — a question is only closed when it has a usable answer or is confirmed irrelevant.
 - **Facts are yours, decisions are the user's.** If the answer is discoverable — in the filesystem, the codebase, git history, package.json, existing docs, the web — look it up instead of asking. Only put actual *decisions* to the user: trade-offs, priorities, scope lines, taste.
+- **Decide, don't ask.** A question only earns a place in a batch if it is a genuine human call. There are three kinds:
+  1. a **scope fork** whose branches lead to materially different outcomes,
+  2. a **product, UX or commercial trade-off** only the stakeholder can own,
+  3. a **destructive or one-way-door** change (data loss, migrations, public API, anything with a cost to undo).
+
+  Everything else you settle yourself from the code and the context, and record as a decision in the playback. A wall of questions is a failure of this filter, not a sign of thoroughness. Before every batch, run each draft question through it and delete the ones that do not survive.
 - **Walk the tree in waves.** Answers open new branches; collect all newly opened branches from a batch's answers and put them into the next batch together. Track resolved vs. open decisions internally, and tell the user roughly how many open decisions remain at the top of each batch.
 - **Relentless, not endless.** Every question must change what would be written in the PRD. When an answer wouldn't alter the spec, don't ask it. Trivial confirmations can be bundled into the final draft review instead of asked individually.
 - **Do not write the PRD until the user confirms shared understanding.** No acting on partial answers.
@@ -25,6 +31,10 @@ The bar for "done grilling": **a fresh engineer with zero context beyond the rep
 ### 1. Ingest and explore
 
 Take whatever the user gives — a sentence, notes, a link, a rant. Before asking anything, explore the environment: the repo (stack, structure, conventions, existing tests and verification commands, similar features already implemented), and any referenced materials. Every question you ask after this must be one the environment could not answer.
+
+**If the repo already keeps work items** (`ToDos/`, `todos/`, `tasks/`, `backlog/`, `issues/` with `FEAT-nn` / `BUG-nn` files), this is probably not a grill at all. Those files are already the contract: hand over to the `ralph-loop-arm` skill in work-item mode, which builds a thin PRD over them and only resolves the open questions embedded in the files. Grill from scratch only for genuinely new work with no tickets behind it.
+
+**Record what you find.** Anything you traced in the code that the loop would otherwise have to trace again — the file that actually owns a behaviour, the helper that already does half the job — goes into your notes with `file:line`. It becomes the PRD's Findings section in step 4. This is the cheapest token saving in the whole process: a fact recorded once here is a search that no iteration repeats.
 
 ### 2. Grill
 
@@ -48,11 +58,26 @@ Challenge weak answers. "Both options" is usually a dodge — ask which one wins
 
 ### 3. Confirm shared understanding
 
-Before writing anything, play back a compact summary of every decision made (grouped, not a transcript) and ask: "Is this the spec? Anything missing or wrong?" Iterate until the user says yes.
+Before writing anything, play back a compact summary of every decision made (grouped, not a transcript) and ask: "Is this the spec? Anything missing or wrong?" Iterate until the user says yes. Include the decisions you took yourself under the decide-don't-ask filter — the user is seeing those for the first time and must be able to overrule them.
+
+### 3b. Write the answers back into the source
+
+Before writing the PRD, update the file the grill started from — the context brief in `context/`, or the work items if there were any:
+
+- replace each resolved open question with the decision that settled it, under a **Decisions taken** heading, dated and in one line each,
+- delete the question from the Open questions list rather than leaving both,
+- fold any new constraint the answers produced into Constraints already decided or Explicitly out of scope.
+
+The source file stays the single point of truth. A decision that lives only in the PRD is lost the moment the next round writes a new one, and the same question gets asked again. This step is not optional and it is not a summary of the chat: it is an edit to the brief.
 
 ### 4. Write the PRD
 
-Write `PRD.md` at the project root using the `ralph-loop-arm` template shape: Goal, Definition of done, Verification, Context, Tasks (one-iteration-sized `- [ ]` checkboxes with acceptance criteria, foundational-first), Out of scope, Notes. Every task must trace back to a grilled decision — nothing invented, nothing left vague. Show it to the user.
+Write `PRD.md` at the project root using the `ralph-loop-arm` template shape: Goal, Definition of done, Verification, Context, **Findings**, **Attitude**, Tasks (one-iteration-sized `- [ ]` checkboxes with acceptance criteria, foundational-first), Out of scope, Notes. Every task must trace back to a grilled decision — nothing invented, nothing left vague. Show it to the user.
+
+Two sections deserve deliberate effort rather than a shrug:
+
+- **Findings** — everything you traced during exploration, with `file:line`. Delete the section only if you genuinely explored nothing.
+- **Attitude** — the 2 to 4 standing decisions, each with its why, that an iteration checks its own choices against when the PRD does not spell something out. Draw them from the grill: the trade-offs the user actually cared about, stated as rules. Resist listing more than four; a long list is a style guide and gets ignored.
 
 ### 5. Offer the handoff
 
@@ -66,4 +91,7 @@ If this is a project where the loop makes sense, offer to arm it: initialize `pr
 - Letting batch answers slide: accepting "Q4: whatever works" without re-asking it as a concrete choice in the next batch.
 - Accepting scope creep silently — every "oh and also..." gets a "in this PRD, or out?"
 - Padding the interview to seem thorough after the tree is actually resolved.
+- Asking a question that fails the decide-don't-ask filter: anything you could have settled from the code and recorded as a decision.
+- Leaving the resolved decisions only in the PRD and never editing the context brief, so the next round re-asks the same questions.
+- Writing `Findings` as prose without `file:line`, or padding `Attitude` into a style guide.
 - Writing tasks the user never discussed. The PRD is the interview's minutes, not your invention.

@@ -1,6 +1,7 @@
 #!/bin/bash
-# setup.sh — install the three process skills into Claude Code so /prd-grill,
-# /grill-me and /ralph-loop-arm are available in every project on this machine.
+# setup.sh — install the four process skills into Claude Code so /grill-me,
+# /prd-grill, /feedback-to-todos and /ralph-loop-arm are available in every
+# project on this machine.
 #
 # Usage:
 #   ./setup.sh            copy skills into ~/.claude/skills (skips ones already there)
@@ -24,7 +25,7 @@ done
 mkdir -p "$TARGET"
 installed=0
 skipped=0
-for skill in grill-me prd-grill ralph-loop-arm; do
+for skill in grill-me prd-grill feedback-to-todos ralph-loop-arm; do
   src="$HERE/skills/$skill"
   dst="$TARGET/$skill"
   if [ -e "$dst" ] || [ -L "$dst" ]; then
@@ -58,4 +59,5 @@ else
 fi
 
 echo ""
-echo "Next: open a project with 'claude' and run /prd-grill on your context brief."
+echo "Next: a new project — run /prd-grill on your context brief."
+echo "      an existing one — run /feedback-to-todos on the feedback, then /ralph-loop-arm."
